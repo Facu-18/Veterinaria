@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <title>Veterinaria - <%= nombrePagina %></title>
+</head>
+
+<body class="bg-gray-100 text-gray-900 font-sans">
+    <header class="bg-white shadow-lg rounded-lg p-6 mb-10">
+        <div class="container mx-auto flex items-center justify-between">
+            <a href="/">
+                <img src="/img/vete-removebg-preview.png" alt="Logo Veterinaria" class="h-20">
+            </a>
+            <nav class="flex space-x-6 items-center">
+                <a href="/carrito" class="text-verde-dark hover:text-verde font-medium transition-colors flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 mr-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                    Carrito
+                </a>
+                <a href="/sacar-turno" class="text-verde-dark hover:text-verde font-medium transition-colors">Sacar Turno</a>
+                <a href="/cerrar-sesion" class="text-verde-dark hover:text-verde font-medium transition-colors">Cerrar Sesión</a>
+                
+                    
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 bg-white rounded-lg shadow-lg mb-10">
+        <%- body %>
+    </main>
+
+    <footer class="bg-white shadow-lg rounded-lg p-6">
+        <div class="container mx-auto text-center">
+            <nav class="flex justify-center space-x-6 mb-4">
+                <a href="/carrito" class="text-verde-dark hover:text-verde font-medium transition-colors flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 mr-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                    Carrito
+                </a>
+                <a href="/sacar-turno" class="text-verde-dark hover:text-verde font-medium transition-colors">Sacar Turno</a>
+                <a href="/cerrar-sesion" class="text-verde-dark hover:text-verde font-medium transition-colors">Cerrar Sesión</a>
+               
+            </nav>
+            <p class="text-gray-700">&copy; 2024 Veterinaria. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

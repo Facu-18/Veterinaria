@@ -1,0 +1,21 @@
+# Auto-detect text files and perform LF normalization
+* text=auto
+
+# Explicitly declare text files we want to always be normalized and converted to LF
+*.js text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.pug text eol=lf
+*.md text eol=lf
+
+# Ensure binary files are always treated as binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.mov binary
+*.mp4 binary
+*.ttf binary
+*.woff binary

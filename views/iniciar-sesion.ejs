@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= nombrePagina %></title>
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <main class="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center font-kalam"><%= nombrePagina %></h1>
+
+            <form action="/iniciar-sesion" method="POST" class="space-y-4">
+                <div class="space-y-2">
+                    <label class="block text-gray-700 font-medium">E-mail</label>
+                    <input type="email" name="email" placeholder="Tu email" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-naranja focus:border-transparent">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-gray-700 font-medium">Contraseña</label>
+                    <input type="password" name="password" placeholder="Tu Contraseña" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-naranja focus:border-transparent">
+                </div>
+                <div class="flex justify-center">
+                    <input class="bg-naranja hover:bg-naranja-dark text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105" type="submit" name="enviar" value="Iniciar Sesión">
+                </div>
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="/auth/google" class="flex items-center justify-center bg-verde hover:bg-verde-dark text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                    <img src="../img/google.png" alt="Logo de Google" class="w-6 h-6 mr-2">
+                    Regístrate con Google
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
