@@ -7,7 +7,7 @@ import db from '../config/db.js';
 import Categoria from './Categoria.js';
 
 const Producto = db.define('Producto', {
-    id: {
+    producto_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
@@ -32,7 +32,7 @@ const Producto = db.define('Producto', {
         type: DataTypes.INTEGER,
         references: {
             model: Categoria,
-            key: 'id'
+            key: 'categoria_id'
         }
     }
 }, {
