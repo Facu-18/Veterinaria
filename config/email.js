@@ -17,10 +17,11 @@ const emailConfirmarCuenta = async (datos) => {
     // Renderiza la plantilla EJS
     const templatePath = path.resolve('views', 'emails', 'confirmar-cuenta.ejs');
     const html = await ejs.renderFile(templatePath, { nombre, url: url });
+   
 
     // Enviar el correo
     await transport.sendMail({
-        from: '"Meeti" <no-reply@meeti.com>',
+        from: '"Veteliceo" <no-reply@meeti.com>',
         to: email,
         subject: 'Confirmar tu cuenta',
         text: `Hola ${nombre}, para verificar tu cuenta haz click en el siguiente enlace: ${url}`,
@@ -28,6 +29,37 @@ const emailConfirmarCuenta = async (datos) => {
     });
 };
 
+const emailOlvidePassword = async (datos) => {
+    const transport = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+
+    const {email, nombre, token} = datos
+
+    // Enviar el mail
+    await transport.sendMail({
+        from: '"Veteliceo" <no-reply@meeti.com>',
+        to: email,
+        subject: 'Reestablece tu contraseña en VeteLiceo.com',
+        text:'Reestablece tu contraseña en VeteLiceo.com',
+        html: `
+            <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 5px;">
+                <p style="font-size: 16px;">Hola ${nombre},</p>
+                <p style="font-size: 16px;">Has solicitado reestablecer tu contraseña en VeteLiceo</p>
+                <p style="font-size: 16px;">Sigue el siguiente enlace para generar una nueva contraseña:</p>
+                <p><a href="http://localhost:${process.env.PORT}/olvide-password/${token}" style="background-color: #4a90e2; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reestablecer Contraseña</a></p>
+                <p style="font-size: 16px;">Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
+            </div>
+        `
+    })
+}
+
 export {
-    emailConfirmarCuenta
+    emailConfirmarCuenta,
+    emailOlvidePassword
 };

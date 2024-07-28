@@ -51,6 +51,7 @@ app.set('layout', 'main'); // Establecer layout por defecto
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Configurar la sesión

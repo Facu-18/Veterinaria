@@ -24,6 +24,13 @@ const Usuario = db.define('usuarios', {
             msg: 'Usuario ya registrado',
         },
     },
+    telefono:{
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: {msg: 'El numero de telefono es obligatorio'}
+        },
+    },
     password: {
         type: Sequelize.STRING(60),
         allowNull: false,
@@ -34,6 +41,10 @@ const Usuario = db.define('usuarios', {
     activo: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
+    },
+    rol:{
+        type: Sequelize.STRING,
+        defaultValue: 'usuario'
     },
     tokenPassword: Sequelize.STRING,
     expiraToken: Sequelize.DATE,

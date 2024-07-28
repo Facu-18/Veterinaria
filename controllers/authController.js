@@ -1,8 +1,11 @@
 import passport from 'passport';
 import UsuarioGoogle from '../models/UsuariosGoogle.js';
+import Usuario from '../models/Usuario.js';
+
+
 
 const autenticarUsuario = passport.authenticate('local', {
-    successRedirect: '/administracion',
+    successRedirect: '/',
     failureRedirect: '/iniciar-sesion',
     failureFlash: true,
     badRequestMessage: 'Ambos campos son obligatorios'
@@ -41,6 +44,8 @@ const registrarConGoogleCallback = (req, res, next) => {
     })(req, res, next);
 };
 
+
+
 const usuarioAutenticado = (req,res,next)=>{
     if(req.isAuthenticated()){
         return next();
@@ -50,6 +55,28 @@ const usuarioAutenticado = (req,res,next)=>{
     return res.redirect('/iniciar-sesion')
 }
 
+const usuarioAdmin = async (req, res, next) => {
+    try {
+        // Verifica si el usuario está autenticado
+        if (!req.isAuthenticated()) {
+            return res.redirect('/iniciar-sesion'); // Redirige si no está autenticado
+        }
+
+        // Obtén el usuario autenticado
+        const usuario = await Usuario.findByPk(req.user.id); // Ajusta el método para obtener el usuario autenticado
+
+        // Verifica si el usuario tiene el rol de admin
+        if (usuario && usuario.rol === 'admin') {
+            req.usuario = usuario; // Almacena el usuario en req.usuario
+            return next(); // Permite el acceso a la ruta
+        } else {
+            return res.status(403).send('Acceso denegado'); // O redirige a una página de acceso denegado
+        }
+    } catch (error) {
+        console.error('Error en el middleware de verificación de rol:', error);
+        return res.status(500).send('Error en el servidor');
+    }
+};
 const seleccionarLayout = (req, res, next) => {
     res.locals.layout = req.isAuthenticated() ? 'main-logged-in' : 'layout';
     next();
@@ -60,5 +87,6 @@ export{
     registrarConGoogle,
     autenticarUsuario,
     usuarioAutenticado,
-    seleccionarLayout
+    seleccionarLayout,
+    usuarioAdmin
 }

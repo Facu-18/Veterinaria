@@ -1,35 +1,35 @@
 import { Sequelize } from "sequelize";
 import db from '../config/db.js';
-import bcrypt from 'bcrypt';
-
-import { DataTypes } from 'sequelize';
-import db from '../config/db.js';
 import Categoria from './Categoria.js';
+import Usuario from "./Usuario.js";
 
-const Producto = db.define('Producto', {
+const Producto = db.define('productos', {
     id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
     nombre: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false
     },
     descripcion: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: true
     },
     precio: {
-        type: DataTypes.FLOAT,
+        type: Sequelize.FLOAT,
         allowNull: false
+    },
+    imagen:{
+       type: Sequelize.STRING,
+       allowNull: false
     },
     stock: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER,
     },
     categoriaId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         references: {
             model: Categoria,
             key: 'id'
@@ -40,7 +40,9 @@ const Producto = db.define('Producto', {
 });
 
 // Definir la relación
-Producto.belongsTo(Categoria, { foreignKey: 'categoriaId' });
-Categoria.hasMany(Producto, { foreignKey: 'categoriaId' });
+Producto.belongsTo(Categoria, {as: 'categoria', foreignKey: 'categoriaId' });
+Categoria.hasMany(Producto, {as: 'categorias', foreignKey: 'categoriaId' });
+Producto.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+Usuario.hasMany(Producto, { foreignKey: 'usuarioId' });
 
 export default Producto;
