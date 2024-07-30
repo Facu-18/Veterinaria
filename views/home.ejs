@@ -13,7 +13,7 @@
         #map {
             height: 500px;
             width: 100%;
-            max-width: 800px;
+            max-width: 1000px; /* Ancho del mapa ajustado */
             margin: 0 auto;
             border: 2px solid #ddd;
             border-radius: 12px;
@@ -21,6 +21,29 @@
 
         .popup-content img {
             border-radius: 8px;
+        }
+
+        .btn {
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 2px solid currentColor;
+            text-align: center;
+            display: inline-block;
+            font-weight: bold;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-verde {
+            color: #10b981; /* Tailwind color green-500 */
+        }
+
+        .btn-blue {
+            color: #3b82f6; /* Tailwind color blue-500 */
         }
     </style>
 </head>
@@ -30,19 +53,17 @@
         <h1 class="text-center text-2xl text-gray-900 font-bold mb-6 font-kalam">Ubicación de la Veterinaria</h1>
         <div id="map"></div>
         <div class="flex justify-around mt-8">
-            <a href="/sacar-turno" class="flex flex-col items-center justify-center w-36 h-36 bg-gray-50 border border-gray-200 rounded-lg shadow hover:bg-gray-100 transition-transform transform hover:scale-105">
+            <a href="/sacar-turno" class="btn btn-verde">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                  </svg>
-                  
-                <span class="text-lg font-bold text-gray-900">Sacar Turno</span>
+                </svg>
+                <span class="text-lg">Sacar Turno</span>
             </a>
-            <a href="/productos" class="flex flex-col items-center justify-center w-36 h-36 bg-gray-50 border border-gray-200 rounded-lg shadow hover:bg-gray-100 transition-transform transform hover:scale-105">
+            <a href="/productos" class="btn btn-blue">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                  </svg>
-                  
-                <span class="text-lg font-bold text-gray-900">Productos</span>
+                </svg>
+                <span class="text-lg">Productos</span>
             </a>
         </div>
     </div>
@@ -70,7 +91,26 @@
     </script>
 
     <h3 class="text-center text-2xl text-gray-900 font-bold mb-6 font-kalam">Productos Destacados</h3>
-
+    <div class="container mx-auto p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% productosDestacados.forEach(producto => { %>
+                <div class="bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+                    <% if (producto.imagen) { %>
+                        <div class="w-full h-48 flex items-center justify-center">
+                            <img src="/uploads/imagen-productos/<%= producto.imagen %>" alt="Imagen del producto" class="max-w-full max-h-full object-contain">
+                        </div>
+                    <% } %>
+                    <div class="p-4">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2"><%= producto.nombre %></h2>
+                        <p class="text-gray-600 mb-4"><%= producto.descripcion %></p>
+                        <p class="text-gray-800 font-bold">$<%= producto.precio %></p>
+                        <p class="text-gray-600 mb-4">Categoría: <%= producto.categoria.nombre %></p>
+                        <a href="/productos/<%= producto.id %>" class="btn btn-verde">Ver Producto</a>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= nombrePagina %></title>
+    <link href="/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold font-kalam"><%= nombrePagina %></h1>
+        </div>
+    </header>
+    <main class="container mx-auto p-4">
+        <div class="bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
+            <% if (producto.imagen) { %>
+                <div class="w-full h-80 md:h-96 overflow-hidden">
+                    <img src="/uploads/imagen-productos/<%= producto.imagen %>" alt="Imagen del producto" class="w-full h-full object-contain">
+                </div>
+            <% } %>
+            <div class="p-6">
+                <h2 class="text-2xl md:text-4xl font-bold text-gray-800 mb-4 font-kalam"><%= producto.nombre %></h2>
+                <p class="text-gray-600 mb-6 text-lg leading-relaxed"><%= producto.descripcion %></p>
+                <p class="text-gray-800 font-bold text-xl md:text-2xl mb-6">$<%= producto.precio %></p>
+                <p class="text-gray-600 text-lg mb-6">Categoría: <%= producto.categoria.nombre %></p>
+                <a href="/carrito/agregar/<%= producto.id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full text-center block">Añadir al Carrito</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

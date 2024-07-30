@@ -1,0 +1,61 @@
+<!-- views/carrito.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <link href="/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Carrito de Compras</h1>
+        </div>
+    </header>
+    <main class="container mx-auto p-4">
+        <div class="bg-white p-4 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Tu Carrito</h2>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2">Producto</th>
+                        <th class="py-2">Cantidad</th>
+                        <th class="py-2">Precio</th>
+                        <th class="py-2">Total</th>
+                        <th class="py-2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% let total = 0; %>
+                    <% carrito.forEach(item => { %>
+                        <% total += item.Producto.precio * item.cantidad; %>
+                        <tr>
+                            <td class="py-2"><%= item.Producto.nombre %></td>
+                            <td class="py-2"><%= item.cantidad %></td>
+                            <td class="py-2">$<%= item.Producto.precio %></td>
+                            <td class="py-2">$<%= item.Producto.precio * item.cantidad %></td>
+                            <td class="py-2">
+                                <form action="/carrito/eliminar/<%= item.id %>" method="POST">
+                                    <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-right font-bold py-2">Total:</td>
+                        <td colspan="2" class="py-2">$<%= total %></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="mt-4">
+                <form action="/pagar" method="POST">
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Pagar</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

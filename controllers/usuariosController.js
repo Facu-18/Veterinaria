@@ -170,6 +170,12 @@ const autenticar = async (req, res)=>{
     res.redirect('/home')
 }
 
+const cerrarSesion=(req,res)=>{
+    req.session.destroy()
+    
+    res.redirect('iniciar-sesion')
+}
+
 // Controlador para mostrar el formulario de olvide-password
 const formularioOlvidePassword = (req, res) => {
     res.render('olvide-password', {
@@ -299,6 +305,7 @@ export{
    formCrearCuenta,
    crearCuenta,
    formIniciarSesion,
+   cerrarSesion,
    confirmarCuenta,
    formularioOlvidePassword,
    resetPassword,
