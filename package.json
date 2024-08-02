@@ -29,6 +29,7 @@
     "express-session": "^1.18.0",
     "express-validator": "^7.1.0",
     "leaflet": "^1.9.4",
+    "mobbex": "^2.3.5",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.10.3",
     "nodemailer": "^6.9.14",

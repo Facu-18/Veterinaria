@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from '../config/db.js';
 import Categoria from './Categoria.js';
 import Usuario from "./Usuario.js";
+import Carrito from "./Carrito.js"
 
 const Producto = db.define('productos', {
     id: {
@@ -44,5 +45,6 @@ Producto.belongsTo(Categoria, {as: 'categoria', foreignKey: 'categoriaId' });
 Categoria.hasMany(Producto, {as: 'categorias', foreignKey: 'categoriaId' });
 Producto.belongsTo(Usuario, { foreignKey: 'usuarioId' });
 Usuario.hasMany(Producto, { foreignKey: 'usuarioId' });
+
 
 export default Producto;

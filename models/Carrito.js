@@ -12,11 +12,5 @@ const Carrito = sequelize.define('Carrito', {
     }
 });
 
-// Relaciones
-Usuario.hasMany(Carrito);
-Carrito.belongsTo(Usuario);
-
-Producto.hasMany(Carrito);
-Carrito.belongsTo(Producto);
 
 export default Carrito;

@@ -6,6 +6,7 @@ import authRoutes from './authRoutes.js';
 import {subirImagen, crearProducto , guardar, mostrarProductos, verProducto, editarProducto, guardarCambios,eliminar } from '../controllers/productosController.js';
 import {admin} from '../controllers/adminController.js'
 import{agregarAlCarrito, eliminarDelCarrito, verCarrito} from '../controllers/carritoController.js'
+import { iniciarPago, verificarPago } from '../controllers/pagoController.js';
 
 
 const router = express.Router();
@@ -36,7 +37,7 @@ router.post('/olvide-password/:tokenPassword', nuevoPassword)
 // Ruta de productos
 router.get('/crear-producto',seleccionarLayout, usuarioAdmin, crearProducto)
 router.post('/crear-producto',seleccionarLayout, usuarioAdmin, subirImagen, guardar)
-router.get('/productos',mostrarProductos,seleccionarLayout)
+router.get('/productos',seleccionarLayout, mostrarProductos)
 router.get('/productos/:id', usuarioAutenticado, verProducto, seleccionarLayout)
 
 router.get('/editar-producto/:id',
@@ -60,7 +61,12 @@ router.get('/administracion',seleccionarLayout, usuarioAdmin, admin)
 
 // Rutas del carrito de compras
 router.post('/carrito/agregar', usuarioAutenticado, agregarAlCarrito, seleccionarLayout);
-router.get('/carrito', usuarioAutenticado, verCarrito, seleccionarLayout);
+router.get('/carrito', usuarioAutenticado,seleccionarLayout, verCarrito );
 router.post('/carrito/eliminar/:id', usuarioAutenticado, eliminarDelCarrito, seleccionarLayout);
+
+router.post('/pagar', iniciarPago);
+router.get('/pagar', iniciarPago)
+router.get('/verificar', verificarPago);
+
 
 export default router;

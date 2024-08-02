@@ -10,6 +10,7 @@ import appRoutes from './routes/appRoutes.js'; // Importa tus rutas de la aplica
 import authRoutes from './routes/authRoutes.js'; // Importa tus rutas de autenticación
 import db from './config/db.js';
 import Categorias from './models/Categoria.js'
+import mobbex from "mobbex";
 
 dotenv.config({ path: '.env' });
 
@@ -46,8 +47,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Usar express-ejs-layouts
-app.use(expressLayouts);
+
 app.set('layout', 'main'); // Establecer layout por defecto
+app.use(expressLayouts);
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));

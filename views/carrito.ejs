@@ -1,4 +1,3 @@
-<!-- views/carrito.ejs -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,51 +9,62 @@
 <body class="bg-gray-100">
     <header class="bg-gray-800 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Carrito de Compras</h1>
+            <h1 class="text-2xl font-bold">Carrito de Compras</h1>
         </div>
     </header>
     <main class="container mx-auto p-4">
-        <div class="bg-white p-4 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-bold mb-4">Tu Carrito</h2>
-            <table class="min-w-full bg-white">
-                <thead>
-                    <tr>
-                        <th class="py-2">Producto</th>
-                        <th class="py-2">Cantidad</th>
-                        <th class="py-2">Precio</th>
-                        <th class="py-2">Total</th>
-                        <th class="py-2">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% let total = 0; %>
-                    <% carrito.forEach(item => { %>
-                        <% total += item.Producto.precio * item.cantidad; %>
-                        <tr>
-                            <td class="py-2"><%= item.Producto.nombre %></td>
-                            <td class="py-2"><%= item.cantidad %></td>
-                            <td class="py-2">$<%= item.Producto.precio %></td>
-                            <td class="py-2">$<%= item.Producto.precio * item.cantidad %></td>
-                            <td class="py-2">
-                                <form action="/carrito/eliminar/<%= item.id %>" method="POST">
-                                    <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
-                                </form>
-                            </td>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold mb-6">Tu Carrito</h2>
+            <% if (carrito.length > 0) { %>
+                <table class="w-full bg-white border border-gray-300 rounded-lg">
+                    <thead>
+                        <tr class="bg-gray-200 border-b">
+                            <th class="py-4 px-6 text-left">Producto</th>
+                            <th class="py-4 px-6 text-left">Cantidad</th>
+                            <th class="py-4 px-6 text-left">Precio</th>
+                            <th class="py-4 px-6 text-left">Total</th>
+                            <th class="py-4 px-6 text-left">Acciones</th>
                         </tr>
-                    <% }) %>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" class="text-right font-bold py-2">Total:</td>
-                        <td colspan="2" class="py-2">$<%= total %></td>
-                    </tr>
-                </tfoot>
-            </table>
-            <div class="mt-4">
+                    </thead>
+                    <tbody>
+                        <% let total = 0; %>
+                        <% carrito.forEach(item => { %>
+                            <% if (item.Producto) { %>
+                                <% total += item.Producto.precio * item.cantidad; %>
+                                <tr class="border-b">
+                                    <td class="py-4 px-6 flex items-center space-x-4">
+                                        <% if (item.Producto.imagen) { %>
+                                            <img src="/uploads/imagen-productos/<%= item.Producto.imagen %>" alt="<%= item.Producto.nombre %>" class="w-16 h-16 object-cover rounded">
+                                        <% } %>
+                                        <span><%= item.Producto.nombre %></span>
+                                    </td>
+                                    <td class="py-4 px-6"><%= item.cantidad %></td>
+                                    <td class="py-4 px-6">$<%= item.Producto.precio.toFixed(2) %></td>
+                                    <td class="py-4 px-6">$<%= (item.Producto.precio * item.cantidad).toFixed(2) %></td>
+                                    <td class="py-4 px-6">
+                                        <form action="/carrito/eliminar/<%= item.id %>" method="POST">
+                                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% }) %>
+                    </tbody>
+                    <tfoot>
+                        <tr class="bg-gray-200">
+                            <td colspan="3" class="text-right font-bold py-4 px-6">Total:</td>
+                            <td colspan="2" class="py-4 px-6 font-bold">$<%= total.toFixed(2) %></td>
+                        </tr>
+                    </tfoot>
+                </table>
                 <form action="/pagar" method="POST">
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Pagar</button>
-                </form>
-            </div>
+                    <input type="hidden" name="monto" value="<%= total %>">
+                    <input type="hidden" name="moneda" value="USD">
+                    <button type="submit" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300 ease-in-out">Pagar</button>
+                  </form>
+            <% } else { %>
+                <p class="text-gray-600">Tu carrito está vacío.</p>
+            <% } %>
         </div>
     </main>
 </body>

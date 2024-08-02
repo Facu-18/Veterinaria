@@ -17,7 +17,7 @@ const crearCuenta = async (req, res) => {
     try {
         // Validación de campos
         await check('nombre').notEmpty().withMessage('El campo nombre es obligatorio').trim().escape().run(req);
-        await check('email').notEmpty().withMessage('El campo email es obligatorio').isEmail().withMessage('El formato no corresponde a un email').run(req);
+        await check('email').notEmpty().withMessage('El campo email es obligatorio').isEmail().trim().withMessage('El formato no corresponde a un email').run(req);
         await check('telefono').notEmpty().withMessage('El campo teléfono es obligatorio').isInt().withMessage('El número no es válido').isLength({ min: 10 }).withMessage('El número de teléfono debe tener al menos 10 dígitos').trim().escape().run(req);
         await check('password').notEmpty().withMessage('El campo contraseña es obligatorio').isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres').trim().escape().run(req);
         await check('repetir_password').notEmpty().withMessage('El campo repetir contraseña no puede ir vacío').custom((value, { req }) => {
@@ -124,8 +124,8 @@ const formIniciarSesion = (req,res)=>{
 
 const autenticar = async (req, res)=>{
     // Validación...
-    await check('email').isEmail().withMessage('El formato no corresponde a un email').run(req);
-    await check('password').notEmpty().withMessage('La contraseña es obligatoria').run(req);
+    await check('email').isEmail().trim().escape().withMessage('El formato no corresponde a un email').run(req);
+    await check('password').notEmpty().trim().escape().withMessage('La contraseña es obligatoria').run(req);
 
     let resultado = validationResult(req);
 
