@@ -1,7 +1,7 @@
 // controllers/carritoController.js
-// import Carrito from '../models/Carrito.js';
-// import Producto from '../models/Productos.js';
-import {Carrito, Producto, Usuario}  from '../models/Index.js'
+import Carrito from '../models/Carrito.js';
+import Producto from '../models/Productos.js';
+
 
 export const agregarAlCarrito = async (req, res) => {
     const { productoId } = req.body;
@@ -29,7 +29,7 @@ export const verCarrito = async (req, res) => {
             include: [
                 {
                     model: Producto,
-                    as: 'Producto' // Asegúrate de que este alias coincida con el definido en las asociaciones
+                    as: 'producto' // Asegúrate de que este alias coincida con el definido en las asociaciones
                 }
             ]
         });

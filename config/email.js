@@ -59,7 +59,45 @@ const emailOlvidePassword = async (datos) => {
     })
 }
 
+const enviarEmailConfirmacionPago = async (datos) => {
+    const transport = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+  
+    const { email, nombre, total, productos } = datos;
+  
+    const listaProductos = productos.map(producto => 
+      `<li>${producto.nombre} - Cantidad: ${producto.cantidad} - Precio: ${producto.precio}</li>`
+    ).join('');
+  
+    // Enviar el mail
+    await transport.sendMail({
+      from: '"Veteliceo" <no-reply@veteliceo.com>',
+      to: email,
+      subject: 'Confirmación de Pago en Veteliceo',
+      text: 'Confirmación de Pago en Veteliceo',
+      html: `
+        <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 5px;">
+          <p style="font-size: 16px;">Hola ${nombre},</p>
+          <p style="font-size: 16px;">Gracias por tu compra en Veteliceo.</p>
+          <p style="font-size: 16px;">Detalles de tu compra:</p>
+          <ul>
+            ${listaProductos}
+          </ul>
+          <p style="font-size: 16px;">Total: ${total}</p>
+          <p style="font-size: 16px;">Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        </div>
+      `
+    });
+  };
+
 export {
     emailConfirmarCuenta,
-    emailOlvidePassword
+    emailOlvidePassword,
+    enviarEmailConfirmacionPago
 };

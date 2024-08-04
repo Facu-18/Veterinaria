@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <title><%= nombrePagina %> - VeteLiceo</title>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+    <main class="flex justify-center items-center min-h-screen p-4">
+        <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center font-kalam"><%= nombrePagina %></h1>
+            
+            <% if (errores && errores.length > 0) { %>
+                <div class="max-w-md mx-auto my-10">
+                    <% errores.forEach(function(error) { %>
+                        <p class="bg-red-600 text-white uppercase text-xs text-center p-2 mb-1 font-bold"><%= error.msg %></p>
+                    <% }); %>
+                </div>
+            <% } %>
+            
+            <form action="/sacar-turno" method="POST" class="space-y-4">
+                <div class="space-y-2">
+                    <label class="block text-gray-700 font-medium">Fecha</label>
+                    <input type="date" name="fecha_turno" value="<%= datos.fecha %>" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-gray-700 font-medium">Hora</label>
+                    <input type="time" name="hora" value="<%= datos.hora %>" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-gray-700 font-medium">Cliente</label>
+                    <input type="text" name="cliente" value="<%= datos.cliente %>" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-gray-700 font-medium">Mascota</label>
+                    <select name="mascota_id" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="">Selecciona una mascota</option>
+                        <% mascotas.forEach(mascota => { %>
+                            <option value="<%= mascota.mascota_id %>" <%= mascota.mascota_id == datos.mascota_id ? 'selected' : '' %>><%= mascota.nombre %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-gray-700 font-medium">Motivo</label>
+                    <input type="text" name="motivo" value="<%= datos.motivo %>" required class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">Agregar Turno</button>
+                </div>
+            </form>
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center font-kalam">Turnos Agendados</h2>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mascota</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <% turnos.forEach(turno => { %>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap"><%= turno.fecha_turno %></td>
+                                <td class="px-6 py-4 whitespace-nowrap"><%= turno.hora %></td>
+                                <td class="px-6 py-4 whitespace-nowrap"><%= turno.cliente %></td>
+                                <td class="px-6 py-4 whitespace-nowrap"><%= turno.mascota_id.nombre %></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <!-- Aquí puedes agregar botones para editar o eliminar -->
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

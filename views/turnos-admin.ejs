@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= nombrePagina %></title>
+    <link rel="stylesheet" href="/css/tailwind.css">
+</head>
+<body>
+    <div class="container mx-auto px-4 py-6">
+        <h1 class="text-2xl font-bold mb-4"><%= nombrePagina %></h1>
+        
+        <% if (turnos.length === 0) { %>
+            <p>No hay turnos agendados.</p>
+        <% } else { %>
+            <table>
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Motivo</th>
+                    <th>Nombre de la Mascota</th>
+                    <th>Nombre del Usuario</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% turnos.forEach(turno => { %>
+                    <tr>
+                      <td class="py-2 px-4 border-b"><%= turno.fecha_turno %></td>
+                      <td class="py-2 px-4 border-b"><%= turno.hora %></td>
+                      <td class="py-2 px-4 border-b"><%= turno.cliente %></td>
+                      <td class="py-2 px-4 border-b"><%= turno.motivo %></td>
+                      <td class="py-2 px-4 border-b"><%= turno.Mascotum ? turno.Mascotum.nombre : 'Desconocida' %></td>
+                      <td class="py-2 px-4 border-b"><%= turno.usuario ? turno.usuario.nombre : 'Desconocido' %></td>
+                      <td class="py-2 px-4 border-b"><%= turno.estado %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+        <% } %>
+    </div>
+</body>
+</html>

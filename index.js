@@ -11,6 +11,7 @@ import authRoutes from './routes/authRoutes.js'; // Importa tus rutas de autenti
 import db from './config/db.js';
 import Categorias from './models/Categoria.js'
 import mobbex from "mobbex";
+import Especies from './models/Especie.js'
 
 dotenv.config({ path: '.env' });
 
@@ -35,6 +36,22 @@ const app = express();
       for (const cat of categorias) {
           await Categorias.findOrCreate({ where: { nombre: cat.nombre }, defaults: cat });
       }
+
+      const especies = [
+        { nombre: 'Perro' },
+        { nombre: 'Gato' },
+        { nombre: 'Conejo' },
+        { nombre: 'Hámster' },
+        { nombre: 'Cobayo / Cuy' },
+        { nombre: 'Reptil' },
+        { nombre: 'Hurón' },
+        { nombre: 'Tortuga' },
+        { nombre: 'Aves' }
+    ];
+
+    for (const esp of especies) {
+        await Especies.findOrCreate({ where: { nombre: esp.nombre }, defaults: esp });
+    }
   
   } catch (error) {
       console.error('Error al conectar y sincronizar la base de datos:', error);

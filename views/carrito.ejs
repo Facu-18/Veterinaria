@@ -19,7 +19,7 @@
                 <table class="w-full bg-white border border-gray-300 rounded-lg">
                     <thead>
                         <tr class="bg-gray-200 border-b">
-                            <th class="py-4 px-6 text-left">Producto</th>
+                            <th class="py-4 px-6 text-left">producto</th>
                             <th class="py-4 px-6 text-left">Cantidad</th>
                             <th class="py-4 px-6 text-left">Precio</th>
                             <th class="py-4 px-6 text-left">Total</th>
@@ -29,18 +29,18 @@
                     <tbody>
                         <% let total = 0; %>
                         <% carrito.forEach(item => { %>
-                            <% if (item.Producto) { %>
-                                <% total += item.Producto.precio * item.cantidad; %>
+                            <% if (item.producto) { %>
+                                <% total += item.producto.precio * item.cantidad; %>
                                 <tr class="border-b">
                                     <td class="py-4 px-6 flex items-center space-x-4">
-                                        <% if (item.Producto.imagen) { %>
-                                            <img src="/uploads/imagen-productos/<%= item.Producto.imagen %>" alt="<%= item.Producto.nombre %>" class="w-16 h-16 object-cover rounded">
+                                        <% if (item.producto.imagen) { %>
+                                            <img src="/uploads/imagen-productos/<%= item.producto.imagen %>" alt="<%= item.producto.nombre %>" class="w-16 h-16 object-cover rounded">
                                         <% } %>
-                                        <span><%= item.Producto.nombre %></span>
+                                        <span><%= item.producto.nombre %></span>
                                     </td>
                                     <td class="py-4 px-6"><%= item.cantidad %></td>
-                                    <td class="py-4 px-6">$<%= item.Producto.precio.toFixed(2) %></td>
-                                    <td class="py-4 px-6">$<%= (item.Producto.precio * item.cantidad).toFixed(2) %></td>
+                                    <td class="py-4 px-6">$<%= item.producto.precio.toFixed(2) %></td>
+                                    <td class="py-4 px-6">$<%= (item.producto.precio * item.cantidad).toFixed(2) %></td>
                                     <td class="py-4 px-6">
                                         <form action="/carrito/eliminar/<%= item.id %>" method="POST">
                                             <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Eliminar</button>

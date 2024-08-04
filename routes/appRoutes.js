@@ -7,7 +7,8 @@ import {subirImagen, crearProducto , guardar, mostrarProductos, verProducto, edi
 import {admin} from '../controllers/adminController.js'
 import{agregarAlCarrito, eliminarDelCarrito, verCarrito} from '../controllers/carritoController.js'
 import { iniciarPago, verificarPago } from '../controllers/pagoController.js';
-
+import { getTurnos, addTurno, getTurnosUsuarios, getTurnosAdmin} from '../controllers/turnosController.js';
+import {formCrearMascota, crearMascota} from '../controllers/mascotaController.js'
 
 const router = express.Router();
 
@@ -37,8 +38,8 @@ router.post('/olvide-password/:tokenPassword', nuevoPassword)
 // Ruta de productos
 router.get('/crear-producto',seleccionarLayout, usuarioAdmin, crearProducto)
 router.post('/crear-producto',seleccionarLayout, usuarioAdmin, subirImagen, guardar)
-router.get('/productos',seleccionarLayout, mostrarProductos)
-router.get('/productos/:id', usuarioAutenticado, verProducto, seleccionarLayout)
+router.get('/productos', seleccionarLayout, usuarioAutenticado, mostrarProductos, seleccionarLayout)
+router.get('/productos/:id', seleccionarLayout, usuarioAutenticado, verProducto, seleccionarLayout)
 
 router.get('/editar-producto/:id',
     usuarioAdmin,
@@ -68,5 +69,14 @@ router.post('/pagar', iniciarPago);
 router.get('/pagar', iniciarPago)
 router.get('/verificar', verificarPago);
 
+// registrar mascota
+router.get('/registrar-mascota', usuarioAutenticado, formCrearMascota)
+router.post('/registrar-mascota', usuarioAutenticado, crearMascota)
+
+// turnero
+router.get('/sacar-turno', usuarioAutenticado, seleccionarLayout, getTurnos);
+router.post('/sacar-turno', usuarioAutenticado, seleccionarLayout, addTurno);
+router.get('/turnos', usuarioAutenticado, getTurnosUsuarios)
+router.get('/turnos-admin', usuarioAdmin, getTurnosAdmin)
 
 export default router;
