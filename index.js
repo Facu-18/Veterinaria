@@ -7,11 +7,12 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import appRoutes from './routes/appRoutes.js'; // Importa tus rutas de la aplicación
-import authRoutes from './routes/authRoutes.js'; // Importa tus rutas de autenticación
 import db from './config/db.js';
 import Categorias from './models/Categoria.js'
 import mobbex from "mobbex";
-import Especies from './models/Especie.js'
+import './jobs/limpiarTurnos.js';
+
+
 
 dotenv.config({ path: '.env' });
 
@@ -21,40 +22,25 @@ const app = express();
 // Conexión a la base de datos
 (async () => {
   try {
-      await db.authenticate();
-      console.log('Conexión establecida correctamente');
-      await db.sync(); // Solo llamar a sync una vez en el inicio
-       
-      // Crear algunas categorías (esto es solo un ejemplo)
-      const categorias = [
-          { nombre: 'Medicamento' },
-          { nombre: 'Alimento' },
-          { nombre: 'Ropa' },
-          { nombre: 'Acceseorios' },
-      ];
+    await db.authenticate();
+    console.log('Conexión establecida correctamente');
+    await db.sync(); // Solo llamar a sync una vez en el inicio
 
-      for (const cat of categorias) {
-          await Categorias.findOrCreate({ where: { nombre: cat.nombre }, defaults: cat });
-      }
-
-      const especies = [
-        { nombre: 'Perro' },
-        { nombre: 'Gato' },
-        { nombre: 'Conejo' },
-        { nombre: 'Hámster' },
-        { nombre: 'Cobayo / Cuy' },
-        { nombre: 'Reptil' },
-        { nombre: 'Hurón' },
-        { nombre: 'Tortuga' },
-        { nombre: 'Aves' }
+    // Crear algunas categorías (esto es solo un ejemplo)
+    const categorias = [
+      { nombre: 'Medicamento' },
+      { nombre: 'Alimento' },
+      { nombre: 'Ropa' },
+      { nombre: 'Acceseorios' },
     ];
 
-    for (const esp of especies) {
-        await Especies.findOrCreate({ where: { nombre: esp.nombre }, defaults: esp });
+    for (const cat of categorias) {
+      await Categorias.findOrCreate({ where: { nombre: cat.nombre }, defaults: cat });
     }
-  
+
+
   } catch (error) {
-      console.error('Error al conectar y sincronizar la base de datos:', error);
+    console.error('Error al conectar y sincronizar la base de datos:', error);
   }
 })();
 // Configuraciones
@@ -97,7 +83,7 @@ app.use((req, res, next) => {
 
 // Rutas
 app.use('/', appRoutes);
-app.use('/', authRoutes);
+
 
 // Iniciar servidor
 app.listen(process.env.PORT, () => {

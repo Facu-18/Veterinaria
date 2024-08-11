@@ -1,50 +1,40 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/db.js';
+import sequelize from '../config/db.js'; // Asegúrate de importar tu instancia de Sequelize
 import Usuario from './Usuario.js';
-import Mascota from './Mascota.js';
+
+
 
 const Turno = sequelize.define('Turno', {
-
-    turno_id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    fecha_turno: {
+    fecha: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+        allowNull: false,
     },
     hora: {
         type: DataTypes.TIME,
-        allowNull: false
+        allowNull: false,
     },
-    cliente: {
+    dni:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: {msg: 'El numero de documento es obligatorio'}
+        },
     },
-
-    mascota_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Mascota,
-            key: 'mascota_id'
-        }
-    },
-    motivo: {
+    nombreMascota: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
-    estado: {
+    especieMascota: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+    },
+    razaMascota: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }
-}, {
-    timestamps: false
 });
 
-Turno.belongsTo(Mascota, { foreignKey: 'mascota_id' });
-Mascota.hasMany(Turno, { foreignKey: 'mascota_id' });
-Usuario.hasMany(Turno, { foreignKey: 'usuario_id' });
-Turno.belongsTo(Usuario, { foreignKey: 'usuario_id' })
-
 export default Turno;
+
+Usuario.hasMany(Turno, { onDelete: 'CASCADE' });
+Turno.belongsTo(Usuario);

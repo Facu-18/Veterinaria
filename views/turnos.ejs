@@ -3,38 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= nombrePagina %></title>
-    <link rel="stylesheet" href="/css/tailwind.css">
+    <title>Mis Turnos</title>
+    <link href="/css/app.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4"><%= nombrePagina %></h1>
-        
-        <% if (turnos.length === 0) { %>
-            <p>No tienes turnos agendados.</p>
-        <% } else { %>
-            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">Fecha</th>
-                        <th class="py-2 px-4 border-b">Hora</th>
-                        <th class="py-2 px-4 border-b">Cliente</th>
-                        <th class="py-2 px-4 border-b">Motivo</th>
-                        <th class="py-2 px-4 border-b">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
+<body class="bg-gray-100 font-sans">
+    <main class="flex justify-center items-center min-h-screen p-4">
+        <div class="w-full max-w-lg bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">Mis Turnos</h1>
+            <ul class="space-y-4">
+                <% if(turnos.length > 0) { %>
                     <% turnos.forEach(turno => { %>
-                        <tr>
-                            <td class="py-2 px-4 border-b"><%= turno.fecha_turno %></td>
-                            <td class="py-2 px-4 border-b"><%= turno.hora %></td>
-                            <td class="py-2 px-4 border-b"><%= turno.cliente %></td>
-                            <td class="py-2 px-4 border-b"><%= turno.motivo %></td>
-                            <td class="py-2 px-4 border-b"><%= turno.estado %></td>
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        <% } %>
-    </div>
+                        <li class="p-4 bg-gray-200 rounded-lg shadow-md">
+                            <p><strong>Fecha:</strong> <%= turno.fecha %></p>
+                            <p><strong>Hora:</strong> <%= turno.hora %></p>
+                            <p><strong>Mascota:</strong> <%= turno.nombreMascota %> (<%= turno.especieMascota %>, <%= turno.razaMascota %>)</p>
+                            
+                            <!-- Botones de Editar y Cancelar -->
+                            <div class="mt-4 flex justify-between">
+                                <a href="/editar-turno/<%= turno.id %>" class="text-blue-500 hover:underline">Editar Turno</a>
+                                <form action="/eliminar-turno/<%= turno.id %>" method="POST">
+                                <button type="submit" class="text-red-500 hover:underline">Cancelar Turno</a>
+                                </form>
+                            </div>
+                        </li>
+                    <% }) %>
+                <% } else { %>
+                    <p>No tienes turnos reservados.</p>
+                <% } %>
+            </ul>
+        </div>
+    </main>
 </body>
+</html>
+

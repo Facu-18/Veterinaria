@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,16 +11,35 @@
     <link href="/css/app.css" rel="stylesheet">
     <title>Veterinaria - <%= nombrePagina %></title>
 </head>
+
 <body class="bg-gray-100 text-gray-900 font-sans">
-    <header class="bg-white shadow-lg rounded-lg p-6 mb-10">
+    <header class="bg-gradient-to-r  shadow-lg rounded-lg p-6 mb-10">
         <div class="container mx-auto flex items-center justify-between">
             <a href="/">
-                <img src="/img/vete-removebg-preview.png" alt="Logo Veterinaria" class="h-20"> <!-- Aumentar tamaño del logo -->
+                <img src="/img/vete-removebg-preview.png" alt="Logo Veterinaria" class="h-24"> <!-- Aumentar tamaño del logo -->
             </a>
-            <nav class="flex space-x-6">
-                <a href="#" class="text-verde-dark hover:text-verde font-medium transition-colors">Sacar Turno</a>
-                <a href="/iniciar-sesion" class="text-verde-dark hover:text-verde font-medium transition-colors">Iniciar Sesión</a>
-                <a href="/crear-cuenta" class="text-verde-dark hover:text-verde font-medium transition-colors">Registrarse</a>
+
+            <!-- Navegación -->
+            <nav id="menu" class="flex flex-col space-y-4 lg:flex-row lg:space-x-8 text-white">
+                <a href="#" class="flex items-center bg-verde hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                    </svg>
+                    <span class="hidden lg:block">Sacar Turno</span>
+                </a>
+                <a href="/iniciar-sesion" class="flex items-center bg-verde hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                      </svg>
+                      
+                    <span class="hidden lg:block">Iniciar Sesión</span>
+                </a>
+                <a href="/crear-cuenta" class="flex items-center bg-verde hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                    </svg>
+                    <span class="hidden lg:block">Registrarse</span>
+                </a>
             </nav>
         </div>
     </header>
@@ -40,13 +61,35 @@
 
     <footer class="bg-white shadow-lg rounded-lg p-6">
         <div class="container mx-auto text-center">
-            <nav class="flex justify-center space-x-6 mb-4">
-                <a href="#" class="text-verde-dark hover:text-verde font-medium transition-colors">Sacar Turno</a>
-                <a href="/iniciar-sesion" class="text-verde-dark hover:text-verde font-medium transition-colors">Iniciar Sesión</a>
-                <a href="/crear-cuenta" class="text-verde-dark hover:text-verde font-medium transition-colors">Registrarse</a>
-            </nav>
-            <p class="text-gray-700">&copy; 2024 Veterinaria. Todos los derechos reservados.</p>
+            <!-- Sección de Retiro de Productos -->
+            <div class="mb-4 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                  </svg>
+                  
+                <p class="text-gray-700">Retiro de productos: </p> <a href="https://www.google.com/maps/place/Veterinaria+Liceo/@-31.3544232,-64.1644863,18.75z/data=!4m6!3m5!1s0x943299c5faf0e7ef:0xbf0b44b04395fac!8m2!3d-31.3543786!4d-64.1649664!16s%2Fg%2F11bw5zkvhv!5m1!1e4?entry=ttu" class="text-blue-600">Joaquín Castellanos 5019</a>
+            </div>
+            <!-- Sección de Métodos de Pago -->
+            <div class="mb-4 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                  </svg>
+                  
+                <p class="text-gray-700">Métodos de pago: Tarjeta de crédito, débito, y efectivo</p>
+            </div>
+            <!-- Sección de Atención al Cliente -->
+            <div class="mb-4 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0 6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
+                  </svg>
+                  
+                <p class="text-gray-700">Atención al cliente:</p><a href="#" class="text-blue-600">+54 351 123 4567</a>
+                
+            </div>
+            <p class="text-gray-700">&copy; 2024 Veterinaria Liceo. Todos los derechos reservados.</p>
         </div>
     </footer>
+
 </body>
+
 </html>

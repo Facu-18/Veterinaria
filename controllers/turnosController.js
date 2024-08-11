@@ -1,189 +1,269 @@
 import Turno from '../models/Turno.js';
-import Mascota from '../models/Mascota.js';
-import { check, validationResult } from 'express-validator';
-import moment from 'moment';
 import Usuario from '../models/Usuario.js';
+import { generarHorariosDisponibles } from '../helpers/horarios.js';
+import { check, validationResult } from 'express-validator';
 
-// Controlador para los turnos de los usuarios
-export const getTurnosUsuarios = async (req, res) => {
-  try {
-      const turnos = await Turno.findAll({
-          where: { usuario_id: req.user.id },
-          include: [Mascota]
-      });
-
-      res.render('turnos', { 
-          turnos,
-          nombrePagina: 'Mis Turnos',
-          errores: [],
-          datos: {}
-      });
-  } catch (error) {
-      console.error('Error al obtener los turnos:', error);
-      res.status(500).send('Error al obtener los turnos');
-  }
-};
-
-// Controlador para los turnos de admin
-export const getTurnosAdmin = async (req, res) => {
-  try {
-    const turnos = await Turno.findAll({
-      include: [
-        {
-          model: Mascota,
-          as: 'Mascotum',  // Asegúrate de que este alias coincide con el que usas en la vista
-          attributes: ['nombre']
-        },
-        {
-          model: Usuario,
-          as: 'usuario',  // Asegúrate de que este alias coincide con el que usas en la vista
-          attributes: ['nombre']
-        }
-      ]
-    });
-
-    res.render('turnos-admin', { 
-      turnos,
-      nombrePagina: 'Turnos de Todos los Usuarios',
-      errores: [],
-      datos: {}
-    });
-  } catch (error) {
-    console.error('Error al obtener los turnos:', error);
-    res.status(500).send('Error al obtener los turnos');
-  }
-};
-
-export const getTurnos = async (req, res) => {
-  try {
-    const turnos = await Turno.findAll();
-    const mascotas = await Mascota.findAll({ where: { usuario_id: req.user.id } });
+// Función para renderizar la vista de agendar turno
+export const mostrarFormularioTurno = (req, res) => {
+    const usuario = req.user.id; // O como lo tengas definido en tu sistema de autenticación
     
-    if (!mascotas || mascotas.length === 0) {
-      return res.redirect('/registrar-mascota');
+    res.render('sacar-turno', {
+        nombrePagina: 'Reserva tu Turno',
+        horariosFiltrados: [], // Inicialmente vacío, se llenará dinámicamente con JavaScript
+        datos: {},
+        errores: [],
+        usuario // Pasamos el usuario a la vista
+    });
+};
+
+// Función para obtener los horarios disponibles
+export const obtenerHorariosDisponibles = async (req, res) => {
+    const { fecha } = req.params;
+
+    if (!fecha) {
+        return res.status(400).json({ error: 'Fecha no proporcionada' });
     }
 
-    res.render('sacar-turno', { 
-      turnos,
-      mascotas,
-      nombrePagina: 'Saca Tu Turno',
-      errores: [],
-      datos: {}
+    const diaDeLaSemana = new Date(fecha).getDay();
+    const horariosDisponibles = generarHorariosDisponibles(diaDeLaSemana);
+
+    const turnosReservados = await Turno.findAll({
+        where: { fecha },
+        attributes: ['hora']
     });
-  } catch (error) {
-    console.error('Error al obtener los turnos:', error);
-    res.status(500).send('Error al obtener los turnos');
-  }
+
+    const horariosFiltrados = horariosDisponibles.filter(horario => 
+        !turnosReservados.some(reservado => reservado.hora === horario)
+    );
+
+    res.json({ horariosDisponibles: horariosFiltrados });
 };
 
-export const addTurno = async (req, res) => {
-  const { fecha_turno, hora, cliente, motivo, mascota_id } = req.body;
-  const usuario_id = req.user.id;
+// Función para reservar un turno
+export const reservarTurno = async (req, res) => {
+    // Validación de los datos
+    await check('fecha').isDate().withMessage('La fecha debe ser una fecha válida').run(req);
+    await check('hora').notEmpty().withMessage('La hora es obligatoria').run(req);
+    await check('dni').isInt().notEmpty().isLength({ min: 8 }).withMessage('El documento es obligatorio').run(req);
+    await check('nombreMascota').trim().notEmpty().withMessage('El nombre de la mascota es obligatorio').escape().run(req);
+    await check('especieMascota').trim().notEmpty().withMessage('La especie de la mascota es obligatoria').escape().run(req);
+    await check('razaMascota').trim().notEmpty().withMessage('La raza de la mascota es obligatoria').escape().run(req);
 
-  // Validaciones
-  await check('fecha_turno')
-    .trim()
-    .escape()
-    .notEmpty()
-    .withMessage('La fecha es obligatoria')
-    .isISO8601()
-    .withMessage('Fecha no válida')
-    .custom((value) => {
-      if (moment(value).isBefore(moment(), 'day')) {
-        throw new Error('La fecha no puede ser en el pasado');
-      }
-      return true;
-    })
-    .run(req);
+    const resultado = validationResult(req);
 
-  await check('hora')
-    .trim()
-    .escape()
-    .notEmpty()
-    .withMessage('La hora es obligatoria')
-    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
-    .withMessage('Hora no válida')
-    .run(req);
+    const { fecha, hora, nombreMascota, especieMascota, razaMascota, dni} = req.body;
+    const usuarioId = req.user.id;
 
-  await check('cliente')
-    .trim()
-    .escape()
-    .notEmpty()
-    .withMessage('El nombre del cliente es obligatorio')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('El nombre del cliente debe tener entre 2 y 50 caracteres')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('El nombre del cliente solo puede contener letras y espacios')
-    .run(req);
+    if (!resultado.isEmpty()) {
+        return res.render('sacar-turno', {
+            nombrePagina: 'Reserva tu Turno',
+            horariosFiltrados: [], // Podrías intentar recalcular los horarios aquí si es necesario
+            datos: req.body,
+            errores: resultado.array(),
+            usuario: req.user // Pasamos el usuario a la vista
+        });
+    }
+    console.log(resultado.array())
 
-  await check('mascota_id')
-    .notEmpty()
-    .withMessage('La mascota es obligatoria')
-    .isInt()
-    .withMessage('ID de mascota no válido')
-    .run(req);
+    const turnoExistente = await Turno.findOne({ where: { fecha, hora } });
+    if (turnoExistente) {
+        return res.render('sacar-turno', {
+            nombrePagina: 'Reserva tu Turno',
+            horariosFiltrados: [], // Podrías intentar recalcular los horarios aquí si es necesario
+            datos: req.body,
+            errores: [{ msg: 'Este turno ya está reservado.' }],
+            usuario: req.user
+        });
+    }
 
-  await check('motivo')
-    .trim()
-    .escape()
-    .notEmpty()
-    .withMessage('El motivo es obligatorio')
-    .run(req);
-
-  const resultado = validationResult(req);
-
-  if (!resultado.isEmpty()) {
-    const mascotas = await Mascota.findAll({ where: { usuario_id } }); // Volver a obtener mascotas
-    return res.render('sacar-turno', {
-      nombrePagina: 'Saca Tu Turno',
-      turnos: [],
-      mascotas,
-      errores: resultado.array(),
-      datos: req.body,
+    await Turno.create({
+        fecha,
+        hora,
+        nombreMascota,
+        especieMascota,
+        razaMascota,
+        usuarioId,
+        dni
     });
-  }
 
-  // Verificar si la mascota existe y pertenece al usuario
-  const mascota = await Mascota.findOne({ where: { mascota_id, usuario_id } });
-
-  if (!mascota) {
-    const mascotas = await Mascota.findAll({ where: { usuario_id } }); // Volver a obtener mascotas
-    return res.render('sacar-turno', {
-      nombrePagina: 'Saca Tu Turno',
-      turnos: [],
-      mascotas,
-      errores: [{ msg: 'La mascota es obligatoria o no pertenece al usuario.' }],
-      datos: req.body,
-    });
-  }
-
-  // Verificar si ya hay un turno registrado para la misma fecha y hora
-  const turnoExistente = await Turno.findOne({
-    where: { fecha_turno, hora, usuario_id }
-  });
-
-  if (turnoExistente) {
-    const mascotas = await Mascota.findAll({ where: { usuario_id } }); // Volver a obtener mascotas
-    return res.render('sacar-turno', {
-      nombrePagina: 'Saca Tu Turno',
-      turnos: [],
-      mascotas,
-      errores: [{ msg: 'Ya tienes un turno registrado para esta fecha y hora.' }],
-      datos: req.body,
-    });
-  }
-
-  await Turno.create({
-    fecha_turno,
-    hora,
-    cliente,
-    motivo,
-    mascota_id,
-    usuario_id,
-    estado : 1
-  });
-
-  res.redirect('/turnos');
+    res.redirect('/turnos');
 };
 
+// Función para renderizar la vista de turnos del usuario
+export const getTurnosUsuarios = async (req, res) => {
+    const usuarioId = req.user.id;
 
+    const turnos = await Turno.findAll({
+        where: { usuarioId },
+        order: [['fecha', 'ASC'], ['hora', 'ASC']]
+    });
+
+    res.render('turnos', {
+        nombrePagina: 'Mis Turnos',
+        turnos
+    });
+};
+
+// Función para renderizar la vista de turnos del administrador
+export const getTurnosAdmin = async (req, res) => {
+    const { dni } = req.query; // Obtener el DNI desde la query string
+
+    // Configurar las condiciones de búsqueda
+    const whereCondition = dni ? { dni } : {};
+
+    const turnos = await Turno.findAll({
+        where: whereCondition, // Filtrar por DNI si está presente
+        include: {
+            model: Usuario,
+            attributes: ['nombre'] // Incluir solo el nombre del usuario
+        },
+        order: [['fecha', 'ASC'], ['hora', 'ASC']]
+    });
+
+    res.render('turnos-admin', {
+        nombrePagina: 'Turnos de Usuarios',
+        turnos,
+        dni // Pasar el DNI a la vista para mantener el filtro en el campo de búsqueda
+    });
+};
+
+export const formEditarTurno = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Buscar el turno por ID
+        const turno = await Turno.findByPk(id);
+
+        if (!turno) {
+            return res.status(404).render('error', {
+                nombrePagina: 'Error',
+                mensaje: 'Turno no encontrado'
+            });
+        }
+
+        // Verificar que el usuario autenticado sea el dueño del turno
+        if (turno.usuarioId !== req.user.id) {
+            return res.status(403).render('error', {
+                nombrePagina: 'Acceso Denegado',
+                mensaje: 'No tienes permisos para modificar este turno'
+            });
+        }
+
+        // Obtener horarios disponibles para la fecha del turno
+        const diaDeLaSemana = new Date(turno.fecha).getDay();
+        const horariosDisponibles = generarHorariosDisponibles(diaDeLaSemana);
+
+        // Obtener turnos reservados en la misma fecha para filtrar los horarios disponibles
+        const turnosReservados = await Turno.findAll({
+            where: { fecha: turno.fecha },
+            attributes: ['hora']
+        });
+
+        const horariosFiltrados = horariosDisponibles.filter(horario => 
+            !turnosReservados.some(reservado => reservado.hora === horario)
+        );
+
+        res.render('editar-turno', {
+            nombrePagina: 'Modifica tu turno',
+            turno, // Pasar el turno al formulario
+            horariosFiltrados,
+            errores: [],
+            usuario: req.user
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).render('error', {
+            nombrePagina: 'Error',
+            mensaje: 'Error interno del servidor'
+        });
+    }
+};
+
+export const actualizarTurno = async (req, res) => {
+    const { id } = req.params;
+    const { fecha, hora, nombreMascota, especieMascota, razaMascota } = req.body;
+    const resultado = validationResult(req);
+
+    try {
+        // Validación de los datos
+        await check('fecha').isDate().withMessage('La fecha debe ser una fecha válida').run(req);
+        await check('hora').notEmpty().withMessage('La hora es obligatoria').run(req);
+        await check('dni').isInt().notEmpty().isLength({ min: 8 }).withMessage('El documento es obligatorio').run(req);
+        await check('nombreMascota').trim().notEmpty().withMessage('El nombre de la mascota es obligatorio').escape().run(req);
+        await check('especieMascota').trim().notEmpty().withMessage('La especie de la mascota es obligatoria').escape().run(req);
+        await check('razaMascota').trim().notEmpty().withMessage('La raza de la mascota es obligatoria').escape().run(req);
+
+        if (!resultado.isEmpty()) {
+            // Volver a renderizar el formulario con los errores y datos previos
+            const turno = await Turno.findByPk(id);
+            const diaDeLaSemana = new Date(turno.fecha).getDay();
+            const horariosDisponibles = generarHorariosDisponibles(diaDeLaSemana);
+
+            const turnosReservados = await Turno.findAll({
+                where: { fecha: turno.fecha },
+                attributes: ['hora']
+            });
+
+            const horariosFiltrados = horariosDisponibles.filter(horario => 
+                !turnosReservados.some(reservado => reservado.hora === horario)
+            );
+
+            return res.render('editar-turno', {
+                nombrePagina: 'Modifica tu turno',
+                turno,
+                horariosFiltrados,
+                errores: resultado.array(),
+                usuario: req.user
+            });
+        }
+
+        // Buscar y actualizar el turno
+        const turno = await Turno.findByPk(id);
+        if (!turno) {
+            return res.status(404).render('error', {
+                nombrePagina: 'Error',
+                mensaje: 'Turno no encontrado'
+            });
+        }
+
+        turno.fecha = fecha;
+        turno.hora = hora;
+        turno.nombreMascota = nombreMascota;
+        turno.especieMascota = especieMascota;
+        turno.razaMascota = razaMascota;
+
+        await turno.save(); // Guardar los cambios
+
+        // Redirigir o mostrar un mensaje de éxito
+        res.redirect('/turnos');
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).render('error', {
+            nombrePagina: 'Error',
+            mensaje: 'Error interno del servidor'
+        });
+    }
+};
+
+export const eliminarTurno = async (req, res) => {
+    const { id } = req.params;
+
+    // Validar que el turno exista
+    const turno = await Turno.findByPk(id);
+
+    if (!turno) {
+        return res.redirect('/turnos');
+    }
+
+    // Revisar quién visita la URL es el dueño del turno
+    if (turno.usuarioId.toString() !== req.user.id.toString()) {
+        return res.redirect('/turnos');
+    }
+
+    // Eliminar el turno
+    await Turno.destroy({ where: { id: turno.id } }); // Agregando la condición where para eliminar el turno específico
+
+    res.redirect('/turnos');
+};

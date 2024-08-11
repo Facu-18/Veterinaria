@@ -2,13 +2,13 @@ import express from 'express'
 import { home} from '../controllers/homeController.js';
 import { formCrearCuenta, crearCuenta, formIniciarSesion, confirmarCuenta, formularioOlvidePassword, resetPassword, comprobarToken, nuevoPassword, cerrarSesion} from '../controllers/usuariosController.js';
 import {autenticarUsuario, usuarioAutenticado, seleccionarLayout, usuarioAdmin} from '../controllers/authController.js'
-import authRoutes from './authRoutes.js';
+//import authRoutes from './authRoutes.js';
 import {subirImagen, crearProducto , guardar, mostrarProductos, verProducto, editarProducto, guardarCambios,eliminar } from '../controllers/productosController.js';
 import {admin} from '../controllers/adminController.js'
 import{agregarAlCarrito, eliminarDelCarrito, verCarrito} from '../controllers/carritoController.js'
 import { iniciarPago, verificarPago } from '../controllers/pagoController.js';
-import { getTurnos, addTurno, getTurnosUsuarios, getTurnosAdmin} from '../controllers/turnosController.js';
-import {formCrearMascota, crearMascota} from '../controllers/mascotaController.js'
+import {obtenerHorariosDisponibles, reservarTurno, mostrarFormularioTurno, getTurnosUsuarios, getTurnosAdmin, formEditarTurno, actualizarTurno, eliminarTurno} from '../controllers/turnosController.js'
+
 
 const router = express.Router();
 
@@ -55,7 +55,7 @@ router.post('/editar-producto/:id',
 
 router.post('/eliminar-producto/:id', usuarioAdmin, eliminar)
 // Rutas de autenticación
-router.use('/auth', authRoutes);
+
 
 // Panel de administracion
 router.get('/administracion',seleccionarLayout, usuarioAdmin, admin)
@@ -69,14 +69,19 @@ router.post('/pagar', iniciarPago);
 router.get('/pagar', iniciarPago)
 router.get('/verificar', verificarPago);
 
-// registrar mascota
-router.get('/registrar-mascota', usuarioAutenticado, formCrearMascota)
-router.post('/registrar-mascota', usuarioAutenticado, crearMascota)
+
 
 // turnero
-router.get('/sacar-turno', usuarioAutenticado, seleccionarLayout, getTurnos);
-router.post('/sacar-turno', usuarioAutenticado, seleccionarLayout, addTurno);
-router.get('/turnos', usuarioAutenticado, getTurnosUsuarios)
+router.get('/sacar-turno', usuarioAutenticado, seleccionarLayout, mostrarFormularioTurno);
+router.get('/horarios-disponibles/:fecha', usuarioAutenticado, obtenerHorariosDisponibles);
+router.post('/sacar-turno', usuarioAutenticado, seleccionarLayout, reservarTurno);
+router.get('/turnos', usuarioAutenticado, seleccionarLayout, getTurnosUsuarios)
+router.get('/turnos/:id', usuarioAutenticado, seleccionarLayout, getTurnosUsuarios)
 router.get('/turnos-admin', usuarioAdmin, getTurnosAdmin)
+
+//editar y eliminar los turnos
+router.get('/editar-turno/:id', usuarioAutenticado, seleccionarLayout, formEditarTurno )
+router.post('/editar-turno/:id', usuarioAutenticado, seleccionarLayout, actualizarTurno);
+router.post('/eliminar-turno/:id',usuarioAutenticado, seleccionarLayout, eliminarTurno)
 
 export default router;

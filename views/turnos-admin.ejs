@@ -3,43 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= nombrePagina %></title>
-    <link rel="stylesheet" href="/css/tailwind.css">
+    <title>Turnos de Usuarios</title>
+    <link href="/css/app.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4"><%= nombrePagina %></h1>
-        
-        <% if (turnos.length === 0) { %>
-            <p>No hay turnos agendados.</p>
-        <% } else { %>
-            <table>
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th>Cliente</th>
-                    <th>Motivo</th>
-                    <th>Nombre de la Mascota</th>
-                    <th>Nombre del Usuario</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% turnos.forEach(turno => { %>
-                    <tr>
-                      <td class="py-2 px-4 border-b"><%= turno.fecha_turno %></td>
-                      <td class="py-2 px-4 border-b"><%= turno.hora %></td>
-                      <td class="py-2 px-4 border-b"><%= turno.cliente %></td>
-                      <td class="py-2 px-4 border-b"><%= turno.motivo %></td>
-                      <td class="py-2 px-4 border-b"><%= turno.Mascotum ? turno.Mascotum.nombre : 'Desconocida' %></td>
-                      <td class="py-2 px-4 border-b"><%= turno.usuario ? turno.usuario.nombre : 'Desconocido' %></td>
-                      <td class="py-2 px-4 border-b"><%= turno.estado %></td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-        <% } %>
-    </div>
+<body class="bg-gray-100 font-sans">
+    <main class="flex justify-center items-center min-h-screen p-4">
+        <div class="w-full max-w-lg bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">Turnos de Usuarios</h1>
+
+            <!-- Barra de búsqueda por DNI -->
+            <form action="/turnos-admin" method="GET" class="mb-6">
+                <input 
+                    type="text" 
+                    name="dni" 
+                    placeholder="Buscar por DNI" 
+                    class="w-full p-2 border border-gray-300 rounded mb-4"
+                    value="<%= dni %>" <!-- Mantener el valor del campo si ya se ha buscado -->
+                
+                <button 
+                    type="submit" 
+                    class="w-full bg-blue-500 text-white p-2 rounded font-bold"
+                >
+                    Buscar
+                </button>
+            </form>
+
+            <ul class="space-y-4">
+                <% if(turnos.length > 0) { %>
+                    <% turnos.forEach(turno => { %>
+                        <li class="p-4 bg-gray-200 rounded-lg shadow-md">
+                            <p><strong>Usuario:</strong> <%= turno.usuario.nombre %></p>
+                            <p><strong>DNI:</strong> <%= turno.dni %></p>
+                            <p><strong>Fecha:</strong> <%= turno.fecha %></p>
+                            <p><strong>Hora:</strong> <%= turno.hora %></p>
+                            <p><strong>Mascota:</strong> <%= turno.nombreMascota %> (<%= turno.especieMascota %>, <%= turno.razaMascota %>)</p>
+                        </li>
+                    <% }) %>
+                <% } else { %>
+                    <p>No hay turnos reservados.</p>
+                <% } %>
+            </ul>
+        </div>
+    </main>
 </body>
 </html>
